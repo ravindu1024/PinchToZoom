@@ -29,7 +29,7 @@ import com.bogdwellers.pinchtozoom.animation.ScaleAnimatorHandler;
  *
  */
 public class ImageMatrixTouchHandler extends MultiTouchListener {
-	
+
     public static final int NONE = 0;
     public static final int DRAG = 1;
     public static final int PINCH = 2;
@@ -64,6 +64,12 @@ public class ImageMatrixTouchHandler extends MultiTouchListener {
     private boolean updateTouchState;
 	private GestureDetector gestureDetector;
 	private ValueAnimator valueAnimator;
+	private OnSingleClickListener clickListener;
+
+	public interface OnSingleClickListener
+	{
+		void onImageViewClicked();
+	}
 
     /*
      * Constructor(s)
@@ -274,6 +280,14 @@ public class ImageMatrixTouchHandler extends MultiTouchListener {
 	}
 
 	/**
+	 * Sets a single click listener
+	 */
+	public void setClickListener(OnSingleClickListener listener)
+	{
+		this.clickListener = listener;
+	}
+
+	/**
 	 * <p>Evaluates the touch state.</p>
 	 * @param event
 	 * @param matrix
@@ -435,6 +449,14 @@ public class ImageMatrixTouchHandler extends MultiTouchListener {
 				return true;
 			}
 			return super.onDoubleTap(e);
+		}
+
+		@Override
+		public boolean onSingleTapConfirmed(MotionEvent e)
+		{
+			if(clickListener != null)
+				clickListener.onImageViewClicked();
+			return super.onSingleTapConfirmed(e);
 		}
 	}
 
